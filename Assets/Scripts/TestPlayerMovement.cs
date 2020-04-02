@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class TestPlayerMovement : MonoBehaviour
 {
-  
   public float speed = 200.0f;
   public Animator animator;
+
+  Camera main_cam;
   
   float translation = 0.0f;
   
@@ -17,16 +18,16 @@ public class PlayerMovement : MonoBehaviour
 
   SpriteRenderer spriteRenderer;
   Rigidbody2D rb2D; 
-  GameManager gameManager;
-  public bool coinCollect = false;
 
   bool isgrounded = true;
-  bool isFacingLeft = true;
+
 
   private void Awake() {
     spriteRenderer = GetComponent<SpriteRenderer>();
     rb2D = GetComponent<Rigidbody2D>();
-    gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+  }
+  private void Start() {
+    main_cam = Camera.main;
   }
 
   void Update()
@@ -37,28 +38,27 @@ public class PlayerMovement : MonoBehaviour
     if(isjumping && jumpCount < 2) 
     {      
       jumpCount++;
+      // rb2D.AddForce(new Vector2(0.0f, jumpForce), ForceMode2D.Impulse);
       rb2D.velocity = new Vector2(rb2D.velocity.x, jumpForce);
       animator.SetBool("IsJumping", true);
     }
-    if(GameObject.FindGameObjectsWithTag("Coin").Length == 0) gameManager.gameData.hasWon = true;
   }
 
   private void FixedUpdate() {          
     animator.SetFloat("Speed", Mathf.Abs(translation));      
-    if(rb2D.velocity.x > 0 && isFacingLeft) {
-      isFacingLeft = !isFacingLeft;
-      Vector3 tmp = transform.localScale;
-      tmp.x *= -1;
-      transform.localScale = tmp;
-    } else  if (rb2D.velocity.x < 0 && !isFacingLeft){
-      isFacingLeft = !isFacingLeft;
-      Vector3 tmp = transform.localScale;
-      tmp.x *= -1;
-      transform.localScale = tmp;
+    if(translation < 0) {
+      spriteRenderer.flipX = true;
+    } else {
+      spriteRenderer.flipX = false;
     }
 
+
     translation *= Time.fixedDeltaTime;
+
     rb2D.velocity = new Vector2(translation, rb2D.velocity.y);
+
+    main_cam.transform.position = new Vector3(transform.position.x, transform.position.y, main_cam.transform.position.z);
+    
   }
 
 
@@ -71,28 +71,13 @@ public class PlayerMovement : MonoBehaviour
       jumpCount = 0;
     }
   }
+ 
 
   void OnCollisionExit2D(Collision2D theCollision)
   {
     if (theCollision.gameObject.tag == "Ground")
     {
       isgrounded = false;
-    }
-  }
-   
-  private void OnTriggerEnter2D(Collider2D other) {   
-    if(!coinCollect && other.gameObject.tag == "Coin")
-    {
-      gameManager.gameData.coins += 1;
-      coinCollect = true;
-      Destroy(other.gameObject);      
-    }
-  }
-
-  private void OnTriggerExit2D(Collider2D other) {
-    if(coinCollect && other.gameObject.tag == "Coin")
-    {
-      coinCollect = false;   
     }
   }
 }
