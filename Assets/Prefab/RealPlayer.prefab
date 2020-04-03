@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3631259797014815153}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.021, y: -0.909, z: 0}
+  m_LocalPosition: {x: 0.021, y: -0.632, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7478483580602488807}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 717749912247470841}
   m_Layer: 0
   m_Name: RealPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,9 +129,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0efeb7db92df3ba4ca174520ef8bc6cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 200
   animator: {fileID: 7478483580602488805}
+  speed: 200
   jumpForce: 12
+  coinCollect: 0
 --- !u!95 &7478483580602488805
 Animator:
   serializedVersion: 3
